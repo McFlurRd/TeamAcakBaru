@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fun Basket - Pro Team Balancer</title>
+    <style>
+        :root {
+            --primary: #c40000;
+            --accent: #ffb199;
+            --bg-dark: #121212;
+            --card-bg: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: var(--bg-dark);
+            color: #eee;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        .section {
+            background: #1e1e1e;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            margin-top: 20px;
+        }
+
+        .hidden { display: none; }
+
+        label { display: block; margin-top: 15px; font-weight: bold; color: var(--accent); }
+        input, textarea, select {
+            width: 100%; padding: 12px; margin-top: 8px; border-radius: 8px;
+            border: 1px solid #333; background: #2a2a2a; color: white;
+            box-sizing: border-box; font-size: 14px;
+        }
+
+        button {
+            background: var(--primary); color: white; border: none; padding: 15px 25px;
+            border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 16px;
+            transition: all 0.3s ease; width: 100%; margin-top: 20px;
+        }
+
+        button:hover { background: #ff0000; transform: translateY(-2px); }
+        .btn-secondary { background: #444; }
+
+        .table-container {
+            overflow-x: auto; margin-top: 20px; max-height: 450px;
+            border: 1px solid #333; border-radius: 8px;
+        }
+
+        table { width: 100%; border-collapse: collapse; background: #252525; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #333; }
+        th { background: var(--primary); position: sticky; top: 0; z-index: 10; }
+
+        .final-page {
+            background: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), 
+                        url('https://images.unsplash.com/photo-1546519638-68e109498ffc?q=80&w=2000&auto=format&fit=crop');
+            background-size: cover; background-position: center; background-attachment: fixed;
+            min-height: 100vh; padding: 40px 10px;
+        }
+
+        .header { text-align: center; margin-bottom: 40px; }
+        .header h1 { font-size: 3rem; margin: 0; color: var(--accent); text-transform: uppercase; letter-spacing: 2px; }
+        .header h2 { font-size: 1.5rem; margin: 0; color: #ccc; font-weight: normal; }
+        .header p { font-size: 1.1rem; margin-top: 10px; opacity: 0.9; }
+
+        .team-grid {
+            display: flex;
+            flex-wrap: wrap; 
+            gap: 15px;
+            padding: 20px;
+            justify-content: center; 
+            max-width: 100%;
+        }
+
+        .team-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            width: 260px; 
+            min-width: 260px;
+            max-width: 260px;
+            flex: 0 0 260px;
+        }
+
+        .team-card h3 {
+            text-align: center; margin-top: 0; color: var(--accent);
+            border-bottom: 2px solid var(--accent); padding-bottom: 10px; font-size: 1.3rem;
+        }
+
+        .player-row {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+            overflow: hidden;
+        }
+
+        .player-name {
+            flex: 1; margin-left: 10px; white-space: nowrap;
+            overflow: hidden; text-overflow: ellipsis; 
+            font-size: 0.95rem;
+        }
+
+        .pos-badge {
+            background: #444; color: #fff; padding: 2px 8px; border-radius: 4px;
+            font-size: 0.75rem; font-weight: bold; min-width: 30px; text-align: center;
+        }
+
+        .skill-tag {
+            font-size: 0.65rem; padding: 2px 6px; border-radius: 4px;
+            background: var(--primary); color: white; text-transform: uppercase;
+        }
+
+        .footer-score {
+            margin-top: 15px; text-align: right; font-size: 0.8rem;
+            opacity: 0.6; font-style: italic;
+        }
+
+        .actions {
+            display: flex; gap: 15px; justify-content: center;
+            margin-top: 40px; max-width: 600px; margin-left: auto; margin-right: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="step1" class="container">
+        <div class="section">
+            <h1>🏀 Team Randomizer</h1>
+            <label>📍 Lokasi / Nama Lapangan:</label>
+            <input type="text" id="lapangan" placeholder="Contoh: GOR Sahabat Semarang">
+            
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <div style="flex: 2; min-width: 200px;">
+                    <label>📅 Tanggal:</label>
+                    <input type="date" id="tanggal">
+                </div>
+                <div style="flex: 1; min-width: 100px;">
+                    <label>⏰ Jam Mulai:</label>
+                    <input type="time" id="jamMulai">
+                </div>
+                <div style="flex: 1; min-width: 100px;">
+                    <label>⏰ Jam Selesai:</label>
+                    <input type="time" id="jamSelesai">
+                </div>
+            </div>
+
+            <label>👥 Daftar 25 Pemain (Nama per baris):</label>
+            <textarea id="playerInput" rows="12" placeholder="Copy list absen WA..."></textarea>
+            <button onclick="processToStep2()">Lanjut: Atur Skill & Posisi</button>
+        </div>
+    </div>
+
+    <div id="step2" class="container hidden">
+        <div class="section">
+            <h2>Keseimbangan Tim</h2>
+            <div id="formContainer" class="table-container"></div>
+            <button onclick="generateTeams()">⚡ ACAK TIM SEKARANG</button>
+            <button class="btn-secondary" onclick="backToStep1()">Kembali</button>
+        </div>
+    </div>
+
+    <div id="step3" class="final-page hidden">
+        <div class="header">
+            <h2>Fun Basketball Semarang</h2>
+            <h1 id="resLapangan">FUN GAME</h1>
+            <p id="resWaktu"></p>
+        </div>
+        <div id="teamsOutput" class="team-grid"></div>
+        <div class="actions">
+            <button onclick="generateTeams()" style="background: #2196F3;">🔄 Acak Ulang</button>
+            <button class="btn-secondary" onclick="backToStep2()">Edit Posisi/Skill</button>
+        </div>
+    </div>
+
+    <script>
+        let rawNames = [];
+        const posList = ["PG", "SG", "SF", "PF", "C"];
+        const skillWeights = { "Pro": 4, "Advanced": 3, "Intermediate": 2, "Beginner": 1 };
+
+        function processToStep2() {
+            const input = document.getElementById("playerInput").value.trim();
+            if (!input) return alert("Masukkan nama!");
+            rawNames = input.split("\n").map(n => n.replace(/^\d+[\s.]+|^\W+/, '').trim()).filter(n => n !== "");
+            if (rawNames.length !== 25) return alert("Harus 25 pemain!");
+
+            let html = `<table><thead><tr><th>Nama</th><th>P1</th><th>P2</th><th>Skill</th></tr></thead><tbody>`;
+            rawNames.forEach((name, i) => {
+                html += `<tr>
+                    <td><strong>${name}</strong></td>
+                    <td><select id="p1-${i}">${posList.map(p => `<option>${p}</option>`).join("")}</select></td>
+                    <td><select id="p2-${i}">${posList.map((p,idx) => `<option ${idx===1?'selected':''}>${p}</option>`).join("")}</select></td>
+                    <td><select id="sk-${i}"><option value="Beginner">Beginner</option><option value="Intermediate" selected>Intermediate</option><option value="Advanced">Advanced</option><option value="Pro">Pro</option></select></td>
+                </tr>`;
+            });
+            document.getElementById("formContainer").innerHTML = html + "</tbody></table>";
+            document.getElementById("step1").classList.add("hidden");
+            document.getElementById("step2").classList.remove("hidden");
+        }
+
+        function backToStep1() { document.getElementById("step2").classList.add("hidden"); document.getElementById("step1").classList.remove("hidden"); }
+        function backToStep2() { document.getElementById("step3").classList.add("hidden"); document.getElementById("step2").classList.remove("hidden"); }
+
+        function generateTeams() {
+            let playersData = rawNames.map((name, i) => ({
+                name,
+                p1: document.getElementById(`p1-${i}`).value,
+                p2: document.getElementById(`p2-${i}`).value,
+                skillName: document.getElementById(`sk-${i}`).value,
+                skillVal: skillWeights[document.getElementById(`sk-${i}`).value],
+                assigned: false
+            }));
+
+            const teamKeys = ['A', 'B', 'C', 'D', 'E'];
+            let teams = {};
+            teamKeys.forEach(k => teams[k] = { players: {}, totalSkill: 0 });
+
+            playersData.sort(() => Math.random() - 0.5);
+            playersData.sort((a, b) => b.skillVal - a.skillVal);
+
+            playersData.forEach(p => {
+                let sortedTeams = [...teamKeys].sort((a, b) => teams[a].totalSkill - teams[b].totalSkill);
+                for (let t of sortedTeams) {
+                    if (!teams[t].players[p.p1]) {
+                        teams[t].players[p.p1] = p; teams[t].totalSkill += p.skillVal; p.assigned = true; break;
+                    }
+                }
+            });
+
+            playersData.filter(p => !p.assigned).forEach(p => {
+                let sortedTeams = [...teamKeys].sort((a, b) => teams[a].totalSkill - teams[b].totalSkill);
+                for (let t of sortedTeams) {
+                    if (!teams[t].players[p.p2]) {
+                        teams[t].players[p.p2] = p; teams[t].totalSkill += p.skillVal; p.assigned = true; break;
+                    }
+                }
+            });
+
+            playersData.filter(p => !p.assigned).forEach(p => {
+                let sortedTeams = [...teamKeys].sort((a, b) => teams[a].totalSkill - teams[b].totalSkill);
+                for (let t of sortedTeams) {
+                    let emptyPos = posList.find(pos => !teams[t].players[pos]);
+                    if (emptyPos) {
+                        teams[t].players[emptyPos] = p; teams[t].totalSkill += p.skillVal; p.assigned = true; break;
+                    }
+                }
+            });
+
+            renderResults(teams);
+        }
+
+        function renderResults(teams) {
+            const container = document.getElementById("teamsOutput");
+            container.innerHTML = "";
+            
+            document.getElementById("resLapangan").innerText = document.getElementById("lapangan").value || "FUN GAME";
+            
+            const tgl = document.getElementById("tanggal").value;
+            const mulai = document.getElementById("jamMulai").value;
+            const selesai = document.getElementById("jamSelesai").value;
+
+            if(tgl) {
+                const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+                let displayDate = new Date(tgl).toLocaleDateString('id-ID', options);
+                let displayTime = (mulai && selesai) ? `${mulai} - ${selesai}` : (mulai || "");
+                document.getElementById("resWaktu").innerText = `${displayDate} | ${displayTime}`;
+            }
+
+            Object.keys(teams).forEach(tk => {
+                let playersHTML = posList.map(pos => {
+                    let p = teams[tk].players[pos];
+                    return `<div class="player-row">
+                        <span class="pos-badge">${pos}</span>
+                        <span class="player-name">${p ? p.name : '-'}</span>
+                        <span class="skill-tag">${p ? p.skillName : ''}</span>
+                    </div>`;
+                }).join("");
+
+                container.innerHTML += `<div class="team-card"><h3>TEAM ${tk}</h3>${playersHTML}<div class="footer-score">Power Score: ${teams[tk].totalSkill}</div></div>`;
+            });
+
+            document.getElementById("step2").classList.add("hidden");
+            document.getElementById("step3").classList.remove("hidden");
+            window.scrollTo(0,0);
+        }
+    </script>
+</body>
+</html>
